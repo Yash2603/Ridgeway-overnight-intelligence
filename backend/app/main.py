@@ -16,14 +16,15 @@ origins = [
 
 
 app = FastAPI(
-    title="Ridgeway Overnight Intelligence API",
+    title="Ridgeway Overnight Intelligence",
     version="1.0.0",
     description="Python backend for the Ridgeway overnight intelligence workflow.",
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins,
+    allow_origins=origins,
+    #allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
