@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import HTTPException
 
 from backend.app.config import get_settings
 from backend.app.data import get_site_context
@@ -44,4 +45,8 @@ def site_context() -> SiteContextResponse:
 
 @app.post("/api/investigate", response_model=InvestigationResponse)
 def investigate(payload: InvestigationRequest) -> InvestigationResponse:
-    return run_openai_investigation(payload.operator_note, settings)
+    try:
+        return run_openai_investigation(payload.operator_note, settings)
+    except Exception as e:
+        print("ERROR:", str(e))  # shows in Render logs
+        raise HTTPException(status_code=500, detail=str(e))
