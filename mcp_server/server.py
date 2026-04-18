@@ -58,7 +58,7 @@ def simulate_drone_followup(hotspot_zone_id: str) -> dict:
 
 transport_path = os.getenv("MCP_PATH", "/mcp")
 mcp_app = mcp.http_app(path=transport_path)
-app = FastAPI()
+app = FastAPI(lifespan=mcp_app.lifespan)
 
 @app.get("/tools")
 def get_tools():
@@ -102,7 +102,6 @@ async def healthcheck() -> dict[str, str]:
     return {"status": "ok"}
 
 
-mcp_app = mcp.http_app(path="/")
 app.mount("/mcp", mcp_app)
 
 
