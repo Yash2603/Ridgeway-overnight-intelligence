@@ -92,6 +92,12 @@ def get_tools():
         ]
     }
 
+transport_path = "/mcp"
+mcp_app = mcp.http_app(path=transport_path)
+
+app = FastAPI(lifespan=mcp_app.lifespan)
+app.router.redirect_slashes = False   # ← stops the 307
+
 @app.get("/")
 async def root() -> dict[str, str]:
     return {"status": "ok", "service": "ridgeway-mcp"}
