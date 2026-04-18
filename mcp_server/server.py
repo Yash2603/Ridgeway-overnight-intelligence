@@ -1,7 +1,7 @@
 import os
 
 import uvicorn
-from starlette.responses import JSONResponse
+from fastapi import FastAPI
 
 from shared.seed_data import OVERNIGHT_EVENTS, SITE_ZONES
 
@@ -57,12 +57,17 @@ def simulate_drone_followup(hotspot_zone_id: str) -> dict:
     }
 
 
-app = mcp.streamable_http_app(path=os.getenv("MCP_PATH", "/mcp"))
+transport_path = os.getenv("MCP_PATH", "/mcp")
+mcp_app = mcp.http_app(path=transport_path)
+app = FastAPI()
 
 
-@app.route("/health")
-async def healthcheck(_request):
-    return JSONResponse({"status": "ok"})
+@app.get("/health")
+async def healthcheck() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+app.mount("/", mcp_app)
 
 
 if __name__ == "__main__":
