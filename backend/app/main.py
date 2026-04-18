@@ -29,23 +29,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/tools")
-def get_tools():
-    return {
-        "tools": [
-            {
-                "name": "fetch_incident_log",
-                "description": "Return overnight site events",
-                "input_schema": {
-                    "type": "object",
-                    "properties": {
-                        "zone_id": {"type": "string"}
-                    }
-                }
-            }
-        ]
-    }
-
 @app.get("/")
 async def root() -> dict[str, str]:
     return {"status": "ok", "service": "ridgeway-api"}
