@@ -102,6 +102,7 @@ async def healthcheck() -> dict[str, str]:
     return {"status": "ok"}
 
 
+mcp_app = mcp.http_app(path="/")
 app.mount("/mcp", mcp_app)
 
 
