@@ -61,6 +61,38 @@ transport_path = os.getenv("MCP_PATH", "/mcp")
 mcp_app = mcp.http_app(path=transport_path)
 app = FastAPI()
 
+@app.get("/tools")
+def get_tools():
+    return {
+        "tools": [
+            {
+                "name": "fetch_incident_log",
+                "description": "Return overnight site events",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {
+                        "zone_id": {"type": "string"},
+                        "event_type": {"type": "string"},
+                        "severity": {"type": "string"}
+                    },
+                    "required": []
+                }
+            },
+            {
+                "name": "query_badge_system",
+                "description": "Check badge anomalies",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {
+                        "zone_id": {"type": "string"},
+                        "person_name": {"type": "string"}
+                    },
+                    "required": []
+                }
+            }
+        ]
+    }
+
 @app.get("/")
 async def root() -> dict[str, str]:
     return {"status": "ok", "service": "ridgeway-mcp"}
