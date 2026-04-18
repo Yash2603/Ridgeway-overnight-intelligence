@@ -61,6 +61,10 @@ transport_path = os.getenv("MCP_PATH", "/mcp")
 mcp_app = mcp.http_app(path=transport_path)
 app = FastAPI()
 
+@app.get("/")
+async def root() -> dict[str, str]:
+    return {"status": "ok", "service": "ridgeway-mcp"}
+
 
 @app.get("/health")
 async def healthcheck() -> dict[str, str]:
