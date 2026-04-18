@@ -56,6 +56,9 @@ def simulate_drone_followup(hotspot_zone_id: str) -> dict:
         }
     }
 
+@mcp.get("/test")
+def test():
+    return {"message": "MCP working"}
 
 transport_path = os.getenv("MCP_PATH", "/mcp")
 mcp_app = mcp.http_app(path=transport_path)
