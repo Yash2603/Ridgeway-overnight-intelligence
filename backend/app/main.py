@@ -8,8 +8,6 @@ from backend.app.services.openai_agent import run_openai_investigation
 
 settings = get_settings()
 
-app = FastAPI()
-
 origins = [
     "https://ridgeway-overnight-intelligence.vercel.app",
 ]
