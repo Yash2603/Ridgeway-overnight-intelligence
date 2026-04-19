@@ -56,64 +56,72 @@ def simulate_drone_followup(hotspot_zone_id: str) -> dict:
         }
     }
 
-transport_path = os.getenv("MCP_PATH", "/mcp")
-mcp_app = mcp.http_app(path=transport_path)
-app = FastAPI(lifespan=mcp_app.lifespan)
-
-@app.get("/tools")
-def get_tools():
-    return {
-        "tools": [
-            {
-                "name": "fetch_incident_log",
-                "description": "Return overnight site events",
-                "input_schema": {
-                    "type": "object",
-                    "properties": {
-                        "zone_id": {"type": "string"},
-                        "event_type": {"type": "string"},
-                        "severity": {"type": "string"}
-                    },
-                    "required": []
-                }
-            },
-            {
-                "name": "query_badge_system",
-                "description": "Check badge anomalies",
-                "input_schema": {
-                    "type": "object",
-                    "properties": {
-                        "zone_id": {"type": "string"},
-                        "person_name": {"type": "string"}
-                    },
-                    "required": []
-                }
-            }
-        ]
-    }
-
-transport_path = "/mcp"
-mcp_app = mcp.http_app(path=transport_path)
-
-app = FastAPI(lifespan=mcp_app.lifespan)
-app.router.redirect_slashes = False   # ← stops the 307
-
-@app.get("/")
-async def root() -> dict[str, str]:
-    return {"status": "ok", "service": "ridgeway-mcp"}
-
-
-@app.get("/health")
-async def healthcheck() -> dict[str, str]:
-    return {"status": "ok"}
-
-
-app.mount("/mcp", mcp_app)
-
-
 if __name__ == "__main__":
-    uvicorn.run(
-        app,
+    mcp.run(
+        transport="streamable-http",
         host=os.getenv("MCP_HOST", "0.0.0.0"),
         port=int(os.getenv("MCP_PORT", "9000")),
+        path="/mcp",
     )
+
+# transport_path = os.getenv("MCP_PATH", "/mcp")
+# mcp_app = mcp.http_app(path=transport_path)
+# app = FastAPI(lifespan=mcp_app.lifespan)
+
+# @app.get("/tools")
+# def get_tools():
+#     return {
+#         "tools": [
+#             {
+#                 "name": "fetch_incident_log",
+#                 "description": "Return overnight site events",
+#                 "input_schema": {
+#                     "type": "object",
+#                     "properties": {
+#                         "zone_id": {"type": "string"},
+#                         "event_type": {"type": "string"},
+#                         "severity": {"type": "string"}
+#                     },
+#                     "required": []
+#                 }
+#             },
+#             {
+#                 "name": "query_badge_system",
+#                 "description": "Check badge anomalies",
+#                 "input_schema": {
+#                     "type": "object",
+#                     "properties": {
+#                         "zone_id": {"type": "string"},
+#                         "person_name": {"type": "string"}
+#                     },
+#                     "required": []
+#                 }
+#             }
+#         ]
+#     }
+
+# transport_path = "/mcp"
+# mcp_app = mcp.http_app(path=transport_path)
+
+# app = FastAPI(lifespan=mcp_app.lifespan)
+# app.router.redirect_slashes = False   # ← stops the 307
+
+# @app.get("/")
+# async def root() -> dict[str, str]:
+#     return {"status": "ok", "service": "ridgeway-mcp"}
+
+
+# @app.get("/health")
+# async def healthcheck() -> dict[str, str]:
+#     return {"status": "ok"}
+
+
+# app.mount("/mcp", mcp_app)
+
+
+# if __name__ == "__main__":
+#     uvicorn.run(
+#         app,
+#         host=os.getenv("MCP_HOST", "0.0.0.0"),
+#         port=int(os.getenv("MCP_PORT", "9000")),
+#     )
